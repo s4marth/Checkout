@@ -1,5 +1,9 @@
 
 import "./global.css";
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
 import RecoidContextProvider from "./recoilContextProvider";
 
 
@@ -9,9 +13,39 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
+
  return (
     <html lang="en">
-     <RecoidContextProvider><body style={{background:'#6a2dec'}}>{children}</body></RecoidContextProvider>
+     <RecoidContextProvider>
+      <body style={{background:'#6a2dec'}}>
+      <AppBar position="static" sx={{background: 'inherit', maxHeight:'20%'}}>
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
+          <img height='45px' width='45px' src='https://groww.in/groww-logo-270.png' alt=''/>
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            href="#"
+            sx={{
+              mr: 2,
+              display: { xs: 'none', md: 'flex' },
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'white',
+              textDecoration: 'none',
+              ml:2,
+            }}
+          >
+            Groww
+          </Typography>
+        </Toolbar>
+      </Container>
+    </AppBar>
+        {children}
+      </body>
+    </RecoidContextProvider>
     </html>
   )
 }
