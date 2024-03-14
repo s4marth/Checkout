@@ -11,6 +11,10 @@ export const productsState = atom({
   key: 'productsState',
   default: [],
 });
+export const paymentmethodstate = atom({
+    key: 'paymentmethodstate',
+    default: 'UPI',
+  });
 
 export default function RecoidContextProvider({ children }) {
     return <RecoilRoot>{children}</RecoilRoot>;

@@ -6,19 +6,28 @@ import Image from 'next/image';
 import {TextField, InputLabel, Button, CircularProgress } from '@mui/material';
 import { useRecoilState } from 'recoil';
 import { totalAmountState, productsState } from './recoilContextProvider';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
 
 const Home = () => {
     const router = useRouter();
-    // const [cart, setCart] = useState([]);
-    // const [total, setTotal] = useState(0);
     const [paymentMethods, setPaymentMethods] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const [formstatus, setFormStatus] = useState(false);
   const [total, setTotal] = useRecoilState(totalAmountState);
   const [cart, setCart] = useRecoilState(productsState);
+  
+  const [formdata, setFormData] = useState({
+    fullname: '',
+    address: '',
+    city: '',
+    zipcode: '',
+    country: '',
+    phone: '',
+  });
 
     useEffect(() => {
         const fetchData = async () => {
@@ -40,7 +49,6 @@ const Home = () => {
           if (cart.length === 0) {
             fetchData();
         }
-          //fetchData();
         }, []);
 
 
@@ -49,24 +57,34 @@ const Home = () => {
             cart.forEach(item => {
               totalAmount += item.price * item.quantity;
             });
-            setTotal(totalAmount);
+            
+            setTotal(totalAmount.toFixed(2));
           }, [cart]);
 
-    
-    //   if (cart.length === 0) {
-    //     return <div>No products in cart</div>;
-    //   }
-
-      const proceedToPayment = () => {
-        //   router.push('/payment', { total});
+    const proceedToPayment = () => {
+      if(formstatus)
+      {
         router.push('/payment');
+      }
+      else{
+        toast("Please fill the delivery address first!")
+      }
       };
+
+  const handleapply = ()=>{
+    if (!formdata.fullname || !formdata.address || !formdata.country || !formdata.zipcode || !formdata.city || !formdata.phone) {
+      toast.error('Please fill delivery details');
+      return;
+    }
+    setFormStatus(true);
+    toast("Address saved!")
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h2 style={{textAlign:'center'}}className="text-2xl font-bold mb-4">Checkout</h2>
 
-<div className="max-w-2xl mx-auto p-4 grid gap-6">
+    <div className="max-w-3xl mx-auto p-4 grid gap-6">
       <section aria-labelledby="order-summary-heading" className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-xl font-semibold mb-4" id="order-summary-heading">
@@ -81,12 +99,12 @@ const Home = () => {
                     <span className="font-medium">Item</span>
                     <span className="font-medium">Price</span>
                     <span className="font-medium">Quantity</span>
-                </div>
+                </div><hr />
                 {cart.length===0 ? (<p className="text-gray-500">No items in your cart.</p>): (null)}
                 {cart.map((item) => (
                 <div className="mt-4" key={item.id}>
                  <div className="flex justify-between">
-                    <img src={item.image} style={{height:'30px'}}/>
+                    <img src={item.image} style={{height:'40px'}}/>
                     <span className="font-medium">${item.price}</span>
                     <span className="font-medium">X{item.quantity}</span>
                     </div>
@@ -114,7 +132,7 @@ const Home = () => {
             </div>
             <div className="flex justify-between mt-4">
             <TextField id="standard-basic" label="Discount" variant="standard"/>   
-            <Button >Apply</Button>
+            <Button>Apply</Button>
             </div>
            
           </div>
@@ -128,40 +146,40 @@ const Home = () => {
               <InputLabel  className="text-base" htmlFor="name">
                 Full Name
               </InputLabel>
-              <TextField required size="small" sx={{width:'100%'}} id="outlined-basic" placeholder="Enter your full name" />
+              <TextField required size="small" sx={{width:'100%'}} id="outlined-basic" placeholder="Enter your full name"  value={formdata.fullname} onChange={(e) => setFormData({ ...formdata, fullname: e.target.value })}/>
             </div>
             <div>
               <InputLabel className="text-base" htmlFor="address">
                 Address
               </InputLabel>
-              <TextField required size="small" sx={{width:'100%'}} id="outlined-basic" placeholder="Enter your address" />
+              <TextField required size="small" sx={{width:'100%'}} id="outlined-basic" placeholder="Enter your address" value={formdata.address} onChange={(e) => setFormData({ ...formdata, address: e.target.value })}/>
             </div>
             <div>
               <InputLabel className="text-base" htmlFor="city">
                 City
               </InputLabel>
-              <TextField required size="small" sx={{width:'100%'}} id="outlined-basic" placeholder="Enter your city" />
+              <TextField required size="small" sx={{width:'100%'}} id="outlined-basic" placeholder="Enter your city" value={formdata.city} onChange={(e) => setFormData({ ...formdata, city: e.target.value })}/>
             </div>
             <div>
               <InputLabel className="text-base" htmlFor="zip">
                 ZIP Code
               </InputLabel>
-              <TextField required size="small" sx={{width:'100%'}} id="outlined-basic" placeholder="Enter your ZIP code" />
+              <TextField type='number' required size="small" sx={{width:'100%'}} id="outlined-basic" placeholder="Enter your ZIP code" value={formdata.zipcode} onChange={(e) => setFormData({ ...formdata, zipcode: e.target.value })}/>
             </div>
             <div>
               <InputLabel className="text-base" htmlFor="country">
                 Country
               </InputLabel>
-              <TextField required size="small" sx={{width:'100%'}} id="outlined-basic" placeholder="Enter your country" />
+              <TextField required size="small" sx={{width:'100%'}} id="outlined-basic" placeholder="Enter your country" value={formdata.country} onChange={(e) => setFormData({ ...formdata, country: e.target.value })}/>
             </div>
             <div>
               <InputLabel className="text-base" htmlFor="phone">
                 Phone Number
               </InputLabel>
-              <TextField required size="small" sx={{width:'100%'}} id="outlined-basic" placeholder="Enter your phone number" />
+              <TextField type='number' required size="small" sx={{width:'100%'}} id="outlined-basic" placeholder="Enter your phone number" value={formdata.phone} onChange={(e) => setFormData({ ...formdata, phone: e.target.value })}/>
             </div>
             <div style={{textAlign:'center'}}>
-              <Button sx={{width:'100%'}} type='submit' variant='outlined' color='secondary'>Save Address</Button>
+              <Button sx={{width:'100%'}} variant='outlined' color='secondary' onClick={handleapply}>Save Address</Button>
             </div>
           </form>
         </div>
@@ -171,7 +189,7 @@ const Home = () => {
     </div>
 
                 
-
+    <ToastContainer />
     </div>
   );
 };

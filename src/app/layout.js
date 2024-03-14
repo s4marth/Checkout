@@ -11,7 +11,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
  return (
     <html lang="en">
-     <RecoidContextProvider><body style={{background:'ivory'}}>{children}</body></RecoidContextProvider>
+     <RecoidContextProvider><body style={{background:'#6a2dec'}}>{children}</body></RecoidContextProvider>
     </html>
   )
 }

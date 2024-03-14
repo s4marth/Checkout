@@ -5,15 +5,20 @@ import {Button, TextField, Grid, Modal, Box, CircularProgress} from '@mui/materi
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import MobileFriendlyIcon from '@mui/icons-material/MobileFriendly';
 import { useRecoilValue } from "recoil";
-import { totalAmountState } from '../recoilContextProvider';
+import { totalAmountState, paymentmethodstate } from '../recoilContextProvider';
+import { useRecoilState } from 'recoil';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const PaymentPage = () => {
   const router = useRouter();
-  const [selectedMethod, setSelectedMethod] = useState('');
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showUPIForm, setShowUPIForm] = useState(false);
   const [showCardForm, setShowCardForm] = useState(false);
+  const [selectedMethod, setSelectedMethod] = useRecoilState(paymentmethodstate);
+
+
   const [cardFormData, setCardFormData] = useState({
     cardNumber: '',
     expiryDate: '',
@@ -36,11 +41,18 @@ const PaymentPage = () => {
   };
 
   const handleCardFormSubmit = () => {
-    console.log("handle card submit called")
+    if (!cardFormData.cardNumber || !cardFormData.expiryDate || !cardFormData.cvv || !cardFormData.nameOnCard) {
+      toast.error('Please fill in all the fields');
+      return;
+    }
     router.push('/confirmation');
   };
 
   const handleUPIFormSubmit = () => {
+    if (!upiFormData.upiID) {
+      toast.error('Please fill in the UPI ID');
+      return;
+    }
     router.push('/confirmation');
   };
 
@@ -95,17 +107,19 @@ const PaymentPage = () => {
               <Box sx={{ width: 400, bgcolor: 'background.paper', borderRadius: 4, p: 4, margin: 'auto', mt: 8 }}>
                 {showCardForm && (
                   <form>
+                    <h3 className="text-xl font-semibold">Card Details</h3>
                     <TextField type='number' required label="Card Number" fullWidth margin="normal" value={cardFormData.cardNumber} onChange={(e) => setCardFormData({ ...cardFormData, cardNumber: e.target.value })} />
                     <TextField type='date' required  fullWidth margin="normal" value={cardFormData.expiryDate} onChange={(e) => setCardFormData({ ...cardFormData, expiryDate: e.target.value })} />
                     <TextField type='number' required label="CVV" fullWidth margin="normal" value={cardFormData.cvv} onChange={(e) => setCardFormData({ ...cardFormData, cvv: e.target.value })} />
                     <TextField required label="Name on Card" fullWidth margin="normal" value={cardFormData.nameOnCard} onChange={(e) => setCardFormData({ ...cardFormData, nameOnCard: e.target.value })} />
-                    <Button onClick={handleCardFormSubmit} variant="contained" color="primary">Submit</Button>
+                    <Button sx={{margin:'auto'}} onClick={handleCardFormSubmit} variant="outlined" color="primary">Submit</Button>
                   </form>
                 )}
                 {showUPIForm && (
                   <form>
+                    <h3 className="text-xl font-semibold">UPI Details</h3>
                     <TextField required label="UPI ID" fullWidth margin="normal" value={upiFormData.upiID} onChange={(e) => setUPIFormData({ ...upiFormData, upiID: e.target.value })} />
-                    <Button onClick={handleUPIFormSubmit} variant="contained" color="primary">Submit</Button>
+                    <Button onClick={handleUPIFormSubmit} variant="outlined" color="primary">Submit</Button>
                   </form>
                 )}
               </Box>
@@ -113,6 +127,7 @@ const PaymentPage = () => {
           </div>
       )}
     </div>
+    <ToastContainer />
   </div>
   );
 };
