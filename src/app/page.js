@@ -3,17 +3,22 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, Spinner } from 'react-bootstrap';
 import Image from 'next/image';
-import {TextField, InputLabel, Button } from '@mui/material';
+import {TextField, InputLabel, Button, CircularProgress } from '@mui/material';
+import { useRecoilState } from 'recoil';
+import { totalAmountState, productsState } from './recoilContextProvider';
 
 
 
 
 const Home = () => {
     const router = useRouter();
-    const [cart, setCart] = useState([]);
-    const [total, setTotal] = useState(0);
+    // const [cart, setCart] = useState([]);
+    // const [total, setTotal] = useState(0);
     const [paymentMethods, setPaymentMethods] = useState([]);
     const [loading, setLoading] = useState(true);
+
+  const [total, setTotal] = useRecoilState(totalAmountState);
+  const [cart, setCart] = useRecoilState(productsState);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -32,8 +37,10 @@ const Home = () => {
               setLoading(false);
             }
           };
-          fetchData();
-          
+          if (cart.length === 0) {
+            fetchData();
+        }
+          //fetchData();
         }, []);
 
 
@@ -46,17 +53,13 @@ const Home = () => {
           }, [cart]);
 
     
-      if (cart.length === 0) {
-        return <div>No products in cart</div>;
-      }
+    //   if (cart.length === 0) {
+    //     return <div>No products in cart</div>;
+    //   }
 
       const proceedToPayment = () => {
-        // router.push({
-        //     pathname: '/payment',
-        //     query: { totalAmount: total } // Pass total amount as query parameter
-        //   });
-          router.push('/payment', { totalAmount: total, paymentMethods: paymentMethods });
-        
+        //   router.push('/payment', { total});
+        router.push('/payment');
       };
 
   return (
@@ -69,12 +72,17 @@ const Home = () => {
           <h2 className="text-xl font-semibold mb-4" id="order-summary-heading">
             Order Summary
           </h2>
-            {loading ? <p>Loading...</p> : (<>
+            {loading ? 
+             <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100px', textAlign:'center' }}>
+             <CircularProgress color="primary" />
+            </div>
+            : (<>
                 <div className="flex justify-between text-lg font-bold">
                     <span className="font-medium">Item</span>
                     <span className="font-medium">Price</span>
                     <span className="font-medium">Quantity</span>
                 </div>
+                {cart.length===0 ? (<p className="text-gray-500">No items in your cart.</p>): (null)}
                 {cart.map((item) => (
                 <div className="mt-4" key={item.id}>
                  <div className="flex justify-between">
@@ -85,8 +93,8 @@ const Home = () => {
                 </div>
               ))}
             </>)}
-
-          <p className="text-gray-500">No items in your cart.</p>
+                
+          
           <div className="mt-4">
             <div className="flex justify-between">
               <span className="font-medium">Subtotal</span>
@@ -104,9 +112,14 @@ const Home = () => {
               <span className="text-lg font-bold">Total</span>
               <span className="text-lg font-bold">${total}</span>
             </div>
+            <div className="flex justify-between mt-4">
+            <TextField id="standard-basic" label="Discount" variant="standard"/>   
+            <Button >Apply</Button>
+            </div>
+           
           </div>
           <div className="mt-6">
-            <Button variant='contained' className="w-full" onClick={proceedToPayment}>Proceed to Payment</Button>
+            <Button variant='outlined' color='secondary' className="w-full" onClick={proceedToPayment}>Proceed to Payment</Button>
           </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
@@ -148,7 +161,7 @@ const Home = () => {
               <TextField required size="small" sx={{width:'100%'}} id="outlined-basic" placeholder="Enter your phone number" />
             </div>
             <div style={{textAlign:'center'}}>
-              <Button sx={{width:'100%'}} type='submit' variant='contained'>Save Address</Button>
+              <Button sx={{width:'100%'}} type='submit' variant='outlined' color='secondary'>Save Address</Button>
             </div>
           </form>
         </div>

@@ -1,5 +1,6 @@
 
 import "./global.css";
+import RecoidContextProvider from "./recoilContextProvider";
 
 
 export const metadata = {
@@ -10,7 +11,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
  return (
     <html lang="en">
-      <body style={{background:'ivory'}}>{children}</body>
+     <RecoidContextProvider><body style={{background:'ivory'}}>{children}</body></RecoidContextProvider>
     </html>
   )
 }

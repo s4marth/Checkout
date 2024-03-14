@@ -1,9 +1,11 @@
 "use client"
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import {Button, TextField, Grid, Modal, Box} from '@mui/material';
+import {Button, TextField, Grid, Modal, Box, CircularProgress} from '@mui/material';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import MobileFriendlyIcon from '@mui/icons-material/MobileFriendly';
+import { useRecoilValue } from "recoil";
+import { totalAmountState } from '../recoilContextProvider';
 
 const PaymentPage = () => {
   const router = useRouter();
@@ -61,19 +63,23 @@ const PaymentPage = () => {
     fetchPaymentMethods();
   }, []);
 
-
+  const totalAmountss = useRecoilValue(totalAmountState);
+  console.log("this is recoil", totalAmountss)
 
   return (
 
     <div className="container mx-auto px-4 py-8">
     <div className="mb-4">
       {loading ? (
-        <p>Loading payment methods...</p>
+        <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100px', textAlign:'center' }}>
+        <CircularProgress color="primary" />
+       </div>
       ) : (
         <div className="max-w-2xl mx-auto p-4 grid gap-6">
         <section className="bg-white shadow-md p-6 rounded-md mt-8">
-            <h2 className="text-2xl font-semibold mb-4">Choose Payment Options</h2>
-            <h2 className="text-xl font-semibold mb-4">Total: $566</h2>
+            <h2 style={{textAlign:'center'}} className="text-2xl font-semibold mb-4">Payment</h2>
+            <h3 className="text-xl font-semibold mb-4">Choose Payment Options</h3>
+            <h3 className="text-xl font-semibold mb-4">Total: ${totalAmountss}</h3>
             <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
               <Button variant='outlined' color='primary' sx={{width:'100%'}} onClick={() => handleMethodSelection('Credit/Debit Card')}>
                 Credit/Debit Card
@@ -89,9 +95,9 @@ const PaymentPage = () => {
               <Box sx={{ width: 400, bgcolor: 'background.paper', borderRadius: 4, p: 4, margin: 'auto', mt: 8 }}>
                 {showCardForm && (
                   <form>
-                    <TextField required label="Card Number" fullWidth margin="normal" value={cardFormData.cardNumber} onChange={(e) => setCardFormData({ ...cardFormData, cardNumber: e.target.value })} />
-                    <TextField required label="Expiry Date" fullWidth margin="normal" value={cardFormData.expiryDate} onChange={(e) => setCardFormData({ ...cardFormData, expiryDate: e.target.value })} />
-                    <TextField required label="CVV" fullWidth margin="normal" value={cardFormData.cvv} onChange={(e) => setCardFormData({ ...cardFormData, cvv: e.target.value })} />
+                    <TextField type='number' required label="Card Number" fullWidth margin="normal" value={cardFormData.cardNumber} onChange={(e) => setCardFormData({ ...cardFormData, cardNumber: e.target.value })} />
+                    <TextField type='date' required  fullWidth margin="normal" value={cardFormData.expiryDate} onChange={(e) => setCardFormData({ ...cardFormData, expiryDate: e.target.value })} />
+                    <TextField type='number' required label="CVV" fullWidth margin="normal" value={cardFormData.cvv} onChange={(e) => setCardFormData({ ...cardFormData, cvv: e.target.value })} />
                     <TextField required label="Name on Card" fullWidth margin="normal" value={cardFormData.nameOnCard} onChange={(e) => setCardFormData({ ...cardFormData, nameOnCard: e.target.value })} />
                     <Button onClick={handleCardFormSubmit} variant="contained" color="primary">Submit</Button>
                   </form>
