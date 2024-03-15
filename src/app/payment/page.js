@@ -102,12 +102,26 @@ const PaymentPage = () => {
                 <MobileFriendlyIcon sx={{marginLeft:'5px'}}/>
               </Button>
             </div>
+            <Grid sx={{marginTop:'auto'}} container spacing={2} display='flex' justifyContent='center'>
+              <Grid item>
+                <img height='70px' width='70px' src='https://cdn4.iconfinder.com/data/icons/simple-peyment-methods/512/mastercard-512.png'></img>
+              </Grid>
+              <Grid item>
+                <img height='70px' width='70px' src='https://cdn4.iconfinder.com/data/icons/simple-peyment-methods/512/visa-256.png'></img>
+              </Grid>
+              <Grid item>
+                <img height='70px' width='70px' src='https://cdn0.iconfinder.com/data/icons/payment-method/480/rupay_payment_card_bank-512.png'></img>
+              </Grid>
+              <Grid item>
+                <img height='70px' width='70px' src='https://cdn2.iconfinder.com/data/icons/credit-cards-6/156/american_express-64.png'></img>
+              </Grid>
+            </Grid>
           </section>
           <Modal open={showCardForm || showUPIForm} onClose={() => setShowCardForm(false) || setShowUPIForm(false)}>
               <Box sx={{ width: 400, bgcolor: 'background.paper', borderRadius: 4, p: 4, margin: 'auto', mt: 8 }}>
                 {showCardForm && (
                   <form>
-                    <h3 className="text-xl font-semibold">Card Details</h3>
+                    <h3 className="text-xl font-semibold"> Card Details <CreditCardIcon sx={{marginLeft:'5px'}}/></h3>
                     <TextField type='number' required label="Card Number" fullWidth margin="normal" value={cardFormData.cardNumber} onChange={(e) => setCardFormData({ ...cardFormData, cardNumber: e.target.value })} />
                     <TextField type='date' required  fullWidth margin="normal" value={cardFormData.expiryDate} onChange={(e) => setCardFormData({ ...cardFormData, expiryDate: e.target.value })} />
                     <TextField type='number' required label="CVV" fullWidth margin="normal" value={cardFormData.cvv} onChange={(e) => setCardFormData({ ...cardFormData, cvv: e.target.value })} />
@@ -117,7 +131,8 @@ const PaymentPage = () => {
                 )}
                 {showUPIForm && (
                   <form>
-                    <h3 className="text-xl font-semibold">UPI Details</h3>
+                    
+                    <h3 className="text-xl font-semibold">UPI Details </h3>
                     <TextField required label="UPI ID" fullWidth margin="normal" value={upiFormData.upiID} onChange={(e) => setUPIFormData({ ...upiFormData, upiID: e.target.value })} />
                     <Button onClick={handleUPIFormSubmit} variant="outlined" color="primary">Submit</Button>
                   </form>

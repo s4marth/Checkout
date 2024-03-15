@@ -62,9 +62,13 @@ const Home = () => {
           }, [cart]);
 
     const proceedToPayment = () => {
-      if(formstatus)
+      if(formstatus )
       {
         router.push('/payment');
+      }
+      else if(cart.length==0)
+      {
+        toast("No item in the cart, please refresh")
       }
       else{
         toast("Please fill the delivery address first!")
@@ -77,7 +81,7 @@ const Home = () => {
       return;
     }
     setFormStatus(true);
-    toast("Address saved!")
+    toast("Address saved, now you can proceed!")
   }
 
   return (
@@ -104,7 +108,7 @@ const Home = () => {
                 {cart.map((item) => (
                 <div className="mt-4" key={item.id}>
                  <div className="flex justify-between">
-                    <img src={item.image} style={{height:'40px'}}/>
+                    <img src={item.image} style={{height:'40px', width:'50px'}}/>
                     <span className="font-medium">${item.price}</span>
                     <span className="font-medium">X{item.quantity}</span>
                     </div>
@@ -141,6 +145,9 @@ const Home = () => {
           </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
+          <h2 className="text-xl font-semibold mb-4">
+            Delivery Address
+          </h2>
           <form className="grid gap-4">
             <div>
               <InputLabel  className="text-base" htmlFor="name">

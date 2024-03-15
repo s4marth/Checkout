@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
      <RecoidContextProvider>
       <body style={{background:'#6a2dec'}}>
-      <AppBar position="static" sx={{background: 'inherit', maxHeight:'20%'}}>
+      <AppBar position="static" sx={{background: 'white', maxHeight:'20%'}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <img height='45px' width='45px' src='https://groww.in/groww-logo-270.png' alt=''/>
@@ -33,7 +33,7 @@ export default function RootLayout({ children }) {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: 'white',
+              color: 'Black',
               textDecoration: 'none',
               ml:2,
             }}

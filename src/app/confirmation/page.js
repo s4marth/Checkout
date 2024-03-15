@@ -56,10 +56,10 @@ const ConfirmationPage = () => {
           link to track its progress.
         </p>
         <p className="mt-2">
-          Total Amount: ${orderDetails.totalAmount}
+          Total Amount: <b>${orderDetails.totalAmount}</b>
         </p>
         <p className="mt-2">
-          Payment Method: {orderDetails.paymentMethod}
+          Payment Method: <b>{orderDetails.paymentMethod}</b>
         </p>
         <div className="mt-6">
           <Button className="w-full">Continue Shopping</Button>
